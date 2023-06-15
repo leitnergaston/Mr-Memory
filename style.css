@@ -37,7 +37,7 @@ div {
 .tarjeta {
     position: relative;
     transform-style: preserve-3d;
-    animation: iniciar 4s;
+    animation: iniciar 2s;
 }
 
 .cara {
@@ -67,6 +67,11 @@ div {
     border: white 5px solid;
     font-size: 130%;
     display: inline-block;
+}
+
+#nivel {
+    font-size: 150%;
+    margin-bottom: 20px;
 }
 
 #puntos {
