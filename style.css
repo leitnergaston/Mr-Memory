@@ -37,7 +37,7 @@ div {
 .tarjeta {
     position: relative;
     transform-style: preserve-3d;
-    animation: iniciar 2s;
+    animation: iniciar 4s;
 }
 
 .cara {
