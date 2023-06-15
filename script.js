@@ -1,166 +1,107 @@
-// script.js
 
-// Event listener para escuchar los clics en las tarjetas
-const cards = document.querySelectorAll('.memory-card');
-cards.forEach(card => card.addEventListener('click', flipCard));
+let intentos
+let puntos
+let cantidadTarjetas = 24
+let iconos = []
+let selecciones = []
 
-const resetButton = document.getElementById('reset-button');
-resetButton.addEventListener('click', resetGame);
+generarTablero()
 
-let score = 0;
-const attemptsElement = document.getElementById('attempts');
-const scoreElement = document.getElementById('score');
+function cargarIconos() {
+    iconos = [
+        '<i><img src="img/1.jpg" alt=""></i>',
+        '<i><img src="img/2.jpg" alt=""></i>',
+        '<i><img src="img/3.jpg" alt=""></i>',
+        '<i><img src="img/4.jpg" alt=""></i>',
+        '<i><img src="img/5.jpg" alt=""></i>',
+        '<i><img src="img/6.jpg" alt=""></i>',
+        '<i><img src="img/7.jpg" alt=""></i>',
+        '<i><img src="img/8.jpg" alt=""></i>',
+        '<i><img src="img/9.jpg" alt=""></i>',
+        '<i><img src="img/10.jpg" alt=""></i>',
+        '<i><img src="img/11.jpg" alt=""></i>',
+        '<i><img src="img/12.jpg" alt=""></i>',
 
-
-let hasFlippedCard = false;
-let lockBoard = false;
-let firstCard, secondCard;
-let matches = 0;
-let attempts = 0;
-
-// Array de imágenes para las tarjetas
-const cardImages = [
-    'image1.jpg',
-    'image2.jpg',
-    'image3.jpg',
-    'image4.jpg',
-    'image5.jpg',
-    'image6.jpg',
-    'image7.jpg',
-    'image8.jpg',
-];
-
-// Duplica las imágenes y las mezcla en el tablero
-(function shuffle() {
-    cards.forEach(card => {
-        const randomPos = Math.floor(Math.random() * cardImages.length);
-        card.style.order = randomPos;
-    });
-})();
-
-function flipCard() {
-    if (lockBoard) return;
-    if (this === firstCard) return;
-  
-    this.classList.add('flip');
-  
-    if (!hasFlippedCard) {
-      hasFlippedCard = true;
-      firstCard = this;
-      return;
-    }
-  
-    secondCard = this;
-    checkForMatch();
-  }
-  
-  function checkForMatch() {
-    let isMatch = firstCard.dataset.card === secondCard.dataset.card;
-  
-    isMatch ? disableCards() : unflipCards();
-  
-    attempts++;
-    updateAttempts();
-  }
-  
-  function disableCards() {
-    firstCard.removeEventListener('click', flipCard);
-    secondCard.removeEventListener('click', flipCard);
-  
-    firstCard.classList.add('matched');
-    secondCard.classList.add('matched');
-  
-    resetBoard();
-    matches++;
-    score += 10;
-    updateScore();
-  
-    if (matches === cardImages.length) {
-      setTimeout(() => {
-        alert(`¡Felicidades! Has encontrado todas las parejas en ${attempts} intentos. Tu puntuación es ${score}.`);
-        resetGame();
-      }, 500);
-    }
-  }
-  
-  function unflipCards() {
-    lockBoard = true;
-  
-    setTimeout(() => {
-      firstCard.classList.remove('flip');
-      secondCard.classList.remove('flip');
-  
-      resetBoard();
-    }, 1000);
-  }
-
-function updateScore() {
-    const scoreElement = document.getElementById('score');
-    scoreElement.textContent = `Puntuación: ${score}`;
+    ]
 }
 
-function unflipCards() {
-    lockBoard = true;
+function generarTablero() {
+    puntos = 0
+    document.getElementById("puntos").innerHTML = "Puntos: " + puntos
+    intentos = 0
+    document.getElementById("intentos").innerHTML = "Intentos: " + intentos
+    cargarIconos()
+    selecciones = []
+    let tablero = document.getElementById("tablero")
+    let tarjetas = []
+    for (let i = 0; i < cantidadTarjetas; i++) {
+        tarjetas.push(`
+                <div class="area-tarjeta" onclick="seleccionarTarjeta(${i})">
+                    <div class="tarjeta" id="tarjeta${i}">
+                        <div class="cara trasera" id="trasera${i}">
+                            ${iconos[0]}
+                        </div>
+                        <div class="cara superior">
+                            <i class="far fa-question-circle"></i>
+                        </div>
+                    </div>
+                </div>        
+                `)
+        if (i % 2 == 1) {
+            iconos.splice(0, 1)
+        }
+    }
+    tarjetas.sort(() => Math.random() - 0.5)
+    tablero.innerHTML = tarjetas.join(" ")
+}
 
+function seleccionarTarjeta(i) {
+    let tarjeta = document.getElementById("tarjeta" + i)
+    if (tarjeta.style.transform != "rotateY(180deg)") {
+        tarjeta.style.transform = "rotateY(180deg)"
+        selecciones.push(i)
+    }
+    if (selecciones.length == 2) {
+        deseleccionar(selecciones)
+        selecciones = []
+
+    }
+}
+
+function deseleccionar(selecciones) {
     setTimeout(() => {
-        firstCard.classList.remove('flip');
-        secondCard.classList.remove('flip');
+        let trasera1 = document.getElementById("trasera" + selecciones[0])
+        let trasera2 = document.getElementById("trasera" + selecciones[1])
+        if (trasera1.innerHTML != trasera2.innerHTML) {
+            let tarjeta1 = document.getElementById("tarjeta" + selecciones[0])
+            let tarjeta2 = document.getElementById("tarjeta" + selecciones[1])
+            tarjeta1.style.transform = "rotateY(0deg)"
+            tarjeta2.style.transform = "rotateY(0deg)"
+            intentos++
+            document.getElementById("intentos").innerHTML = "Intentos: " + intentos
 
-        resetBoard();
+        } else {
+            trasera1.style.background = "plum"
+            trasera2.style.background = "plum"
+            puntos++
+            document.getElementById("puntos").innerHTML = "Puntos: " + puntos
+            intentos++
+            document.getElementById("intentos").innerHTML = "Intentos: " + intentos
+        }
+        if (verificarFin()) {
+            setTimeout(() => {
+                alert(`¡Felicidades! Has encontrado todas las parejas en ${intentos} intentos. Tu puntuación es ${puntos}.`);
+            }, 500);
+        }
     }, 1000);
 }
 
-function disableCards() {
-    firstCard.removeEventListener('click', flipCard);
-    secondCard.removeEventListener('click', flipCard);
-
-    firstCard.classList.add('matched');
-    secondCard.classList.add('matched');
-
-    resetBoard();
-    matches++;
-    score += 10;
-    updateScore();
-
-    if (matches === cardImages.length / 2) {
-        setTimeout(() => {
-          alert(`¡Felicidades! Has encontrado todas las parejas en ${attempts} intentos. Tu puntuación es ${score}.`);
-          resetGame();
-        }, 500);
+function verificarFin() {
+    for (let i = 0; i < cantidadTarjetas; i++) {
+        let trasera = document.getElementById("trasera" + i)
+        if (trasera.style.background != "plum") {
+            return false
+        }
     }
+    return true
 }
-
-function resetBoard() {
-    [hasFlippedCard, lockBoard] = [false, false];
-    [firstCard, secondCard] = [null, null];
-}
-
-
-
-function resetGame() {
-    cards.forEach(card => {
-      card.classList.remove('flip', 'matched');
-      card.addEventListener('click', flipCard);
-    });
-  
-    matches = 0;
-    attempts = 0;
-    score = 0;
-    updateAttempts();
-    updateScore();
-  
-    (function shuffle() {
-      cards.forEach(card => {
-        const randomPos = Math.floor(Math.random() * cardImages.length);
-        card.style.order = randomPos;
-      });
-    })();
-  }
-  
-  function updateAttempts() {
-    attemptsElement.textContent = `Intentos: ${attempts}`;
-  }
-  
-  function updateScore() {
-    scoreElement.textContent = `Puntuación: ${score}`;
-  }
