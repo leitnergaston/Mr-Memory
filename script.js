@@ -8,7 +8,9 @@ let niveles = [
   { nivel: 2, cantidadCartas: 10 },
   { nivel: 3, cantidadCartas: 14 },
   { nivel: 4, cantidadCartas: 18 },
-  { nivel: 5, cantidadCartas: 24 },
+  { nivel: 5, cantidadCartas: 22 },
+  { nivel: 6, cantidadCartas: 26 },
+  { nivel: 7, cantidadCartas: 30 },
   // Agrega más niveles según sea necesario
 ];
 let nivelActual = 0;
@@ -17,18 +19,20 @@ nuevoJuego();
 
 function cargarIconos() {
   iconos = [
-    '<i><img src="img/1.jpg" alt=""></i>',
-    '<i><img src="img/2.jpg" alt=""></i>',
-    '<i><img src="img/3.jpg" alt=""></i>',
-    '<i><img src="img/4.jpg" alt=""></i>',
-    '<i><img src="img/5.jpg" alt=""></i>',
-    '<i><img src="img/6.jpg" alt=""></i>',
-    '<i><img src="img/7.jpg" alt=""></i>',
-    '<i><img src="img/8.jpg" alt=""></i>',
-    '<i><img src="img/9.jpg" alt=""></i>',
-    '<i><img src="img/10.jpg" alt=""></i>',
-    '<i><img src="img/11.jpg" alt=""></i>',
-    '<i><img src="img/12.jpg" alt=""></i>',
+    '<i><img src="img/1.png" alt=""></i>',
+    '<i><img src="img/2.png" alt=""></i>',
+    '<i><img src="img/3.png" alt=""></i>',
+    '<i><img src="img/4.png" alt=""></i>',
+    '<i><img src="img/5.png" alt=""></i>',
+    '<i><img src="img/6.png" alt=""></i>',
+    '<i><img src="img/7.png" alt=""></i>',
+    '<i><img src="img/8.png" alt=""></i>',
+    '<i><img src="img/9.png" alt=""></i>',
+    '<i><img src="img/10.png" alt=""></i>',
+    '<i><img src="img/11.png" alt=""></i>',
+    '<i><img src="img/12.png" alt=""></i>',
+    '<i><img src="img/special.png" alt="" class="efecto-rainbow"></i>',
+    
   ];
 }
 
@@ -67,6 +71,13 @@ function seleccionarTarjeta(i) {
     deseleccionar(selecciones);
     selecciones = [];
   }
+
+  // efecto especial para carta special
+  if (trasera1.innerHTML === '<div class="carta-especial"></div>' && trasera2.innerHTML === '<div class="carta-especial"></div>') {
+    tarjeta1.classList.add("efecto-rainbow");
+    tarjeta2.classList.add("efecto-rainbow");
+  }
+  
 }
 
 function deseleccionar(selecciones) {
@@ -83,11 +94,19 @@ function deseleccionar(selecciones) {
     } else {
       trasera1.style.background = "plum";
       trasera2.style.background = "plum";
-      puntos++;
+      if (
+        trasera1.innerHTML.includes("special.png") ||
+        trasera2.innerHTML.includes("special2.png")
+      ) {
+        puntos += 20
+      } else {
+        puntos++;
+      }
       document.getElementById("puntos").innerHTML = "Puntos: " + puntos;
       intentos++;
       document.getElementById("intentos").innerHTML = "Intentos: " + intentos;
     }
+
     if (verificarFin()) {
       setTimeout(() => {
         alert(
