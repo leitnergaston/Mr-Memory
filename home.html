@@ -1,19 +1,32 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>MrMichGame-Memory</title>
+    <title>MrMemory</title>
     <link rel="stylesheet" type="text/css" href="style.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
     />
-    <script src="script.js"></script>
-    <h4 style="left: 10rem; display: flex;">23.6.16v</h4>
+
+    
+
+    
+    <div class="version-div"><h4>23.6.19v</h4></div>
+    <div class="nivelesTotales"><h3>Niveles totales: 5</h3></div>
+    
   </head>
 
   <body>
+
+    <div>
+      <input class="inputNombre" type="text" id="nombreJugador" placeholder="Ingresa tu nombre">
+    </div>
+
+    <div id="tablaClasificacion"></div>
+
     <div>
         <div id="nivel">Nivel</div>
+        <div id="tiempoRestante">Tiempo</div>
     </div>
 
     <div id="tablero">
@@ -30,16 +43,25 @@
       </div>
     </div>
 
-    <br />
+    <br/>
 
     <div>
-      <div class="nuevo-juego" onclick="nuevoJuego()">Nuevo Juego</div>
+      <div id="btnNuevoJuego" onclick="iniciarJuego()">Iniciar Juego</div>
+
+
 
       <div id="puntos">Puntos</div>
       <div id="intentos">Intentos</div>
     </div>
 
+    <br>
+
     
 
+
+    
+    <script src="script.js"></script>
   </body>
+
+  
 </html>
